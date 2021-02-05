@@ -5,26 +5,23 @@ const bodyParser = require('body-parser');
 const { MongoClient, ObjectId } = require('mongodb');
 
 (async () => {
-    const dbUser = process.env.DB_USER;
-    const dbPassword = process.env.DB_PASSWORD;
-    const dbHost = process.env.DB_HOST;
-    const dbName = process.env.DB_NAME;
+  const url = 'mongodb://ubuntu:123456@localhost:27017/admin';
 
-    const url = `mongodb+srv://${dbUser}:${dbPassword}@${dbHost}/${dbName}?retryWrites=true&w=majority`;
+  const dbName = 'ocean_db';
 
-    console.info('Conectando ao banco de dados...');
+  console.info('Conectando ao banco de dados...');
 
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true });
+  const client = await MongoClient.connect(url, { useUnifiedTopology: true });
 
-    console.info('MongoDB conectado com sucesso!');
+  console.info('MongoDB conectado com sucesso!');
 
-    const db = client.db(dbName);
+  const db = client.db(dbName);
 
-    const app = express()
+  const app = express()
 
-    app.use(bodyParser.json());
+  app.use(bodyParser.json());
 
-    const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3000;
 
   /*
   Create, Read (All/Single), Update & Delete
@@ -56,7 +53,7 @@ const { MongoClient, ObjectId } = require('mongodb');
     const id = req.params.id;
 
     const mensagem = await mensagens.findOne({ _id: ObjectId(id) });
-    
+
     res.send(mensagem);
   });
 
@@ -68,7 +65,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 
     await mensagens.updateOne(
       { _id: ObjectId(id) },
-      { 
+      {
         $set: mensagem
       }
     );
